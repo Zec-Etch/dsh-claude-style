@@ -1,0 +1,26 @@
+{
+  "before": {
+    "light": {
+      "delta": 0,
+      "bottom": "",
+      "draft": "Draft kept when the keyboard opens."
+    },
+    "dark": {
+      "delta": 0,
+      "bottom": "",
+      "draft": "Draft kept when the keyboard opens."
+    }
+  },
+  "after": {
+    "light": {
+      "delta": 0,
+      "bottom": "",
+      "draft": "Draft kept when the keyboard opens."
+    },
+    "dark": {
+      "delta": 0,
+      "bottom": "",
+      "draft": "Draft kept when the keyboard opens."
+    }
+  }
+}

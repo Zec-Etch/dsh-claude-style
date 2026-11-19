@@ -1,0 +1,153 @@
+{
+  "desktop": [
+    {
+      "name": "home",
+      "scheme": "light",
+      "pixels": 1152000,
+      "differing": 0,
+      "differingAtLeast12": 0,
+      "bounds": null
+    },
+    {
+      "name": "chat",
+      "scheme": "light",
+      "pixels": 1152000,
+      "differing": 0,
+      "differingAtLeast12": 0,
+      "bounds": null,
+      "beforeComposer": {
+        "rect": [
+          433,
+          830,
+          660,
+          24
+        ],
+        "bottom": "",
+        "draft": "Draft kept when the keyboard opens.",
+        "fontSize": "14px"
+      },
+      "afterComposer": {
+        "rect": [
+          433,
+          830,
+          660,
+          24
+        ],
+        "bottom": "",
+        "draft": "Draft kept when the keyboard opens.",
+        "fontSize": "14px"
+      },
+      "composerEqual": true
+    },
+    {
+      "name": "settings",
+      "scheme": "light",
+      "pixels": 1152000,
+      "differing": 0,
+      "differingAtLeast12": 0,
+      "bounds": null
+    },
+    {
+      "name": "home",
+      "scheme": "dark",
+      "pixels": 1152000,
+      "differing": 0,
+      "differingAtLeast12": 0,
+      "bounds": null
+    },
+    {
+      "name": "chat",
+      "scheme": "dark",
+      "pixels": 1152000,
+      "differing": 58,
+      "differingAtLeast12": 56,
+      "bounds": [
+        804,
+        429,
+        811,
+        438
+      ],
+      "beforeComposer": {
+        "rect": [
+          433,
+          830,
+          660,
+          24
+        ],
+        "bottom": "",
+        "draft": "Draft kept when the keyboard opens.",
+        "fontSize": "14px"
+      },
+      "afterComposer": {
+        "rect": [
+          433,
+          830,
+          660,
+          24
+        ],
+        "bottom": "",
+        "draft": "Draft kept when the keyboard opens.",
+        "fontSize": "14px"
+      },
+      "composerEqual": true
+    },
+    {
+      "name": "settings",
+      "scheme": "dark",
+      "pixels": 1152000,
+      "differing": 0,
+      "differingAtLeast12": 0,
+      "bounds": null
+    }
+  ],
+  "mobile": {
+    "before": {
+      "light": {
+        "layoutHeight": 797,
+        "top": 464,
+        "scale": 0.99999,
+        "seatBottom": 797,
+        "inputBottom": 751,
+        "offset": "",
+        "fontSize": "16px",
+        "touch": true,
+        "draft": "Draft kept when the keyboard opens."
+      },
+      "dark": {
+        "layoutHeight": 797,
+        "top": 464,
+        "scale": 0.99999,
+        "seatBottom": 797,
+        "inputBottom": 751,
+        "offset": "",
+        "fontSize": "16px",
+        "touch": true,
+        "draft": "Draft kept when the keyboard opens."
+      }
+    },
+    "after": {
+      "light": {
+        "layoutHeight": 797,
+        "top": 464,
+        "scale": 0.99999,
+        "seatBottom": 464,
+        "inputBottom": 418,
+        "offset": "333px",
+        "fontSize": "16px",
+        "touch": true,
+        "draft": "Draft kept when the keyboard opens."
+      },
+      "dark": {
+        "layoutHeight": 797,
+        "top": 464,
+        "scale": 0.99999,
+        "seatBottom": 464,
+        "inputBottom": 418,
+        "offset": "333px",
+        "fontSize": "16px",
+        "touch": true,
+        "draft": "Draft kept when the keyboard opens."
+      }
+    }
+  }
+}
