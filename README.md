@@ -1,25 +1,31 @@
-# Mobile composer screenshot evidence
+# 手机输入框修复：截图与测量数据
 
-Before: upstream master `b5f474b`, build `b20dbaf3a1d0`. After: the keyboard-follow patch on the same base, build `05df7e53d571`.
+修复前为上游 `master` 的 `b5f474b`（构建 `b20dbaf3a1d0`）；修复后为同一基线上的键盘跟随补丁（构建 `05df7e53d571`）。截图均来自独立配置下的 DSH Web `0.2.2-rc.5`，对话使用仓库的本地测试模型。
 
-All originals are actual DSH Web 0.2.2-rc.5 pages in isolated profiles. Each capture passed the repository privacy sweep and visible-text leak scan. The session content is from the repository’s local scripted model.
+## 手机端
 
-Mobile: Playwright WebKit, iPhone 14 context, 390 × 797 CSS px. The OS software keyboard is simulated: the browser visual viewport reports height 464 px and scale 0.99999; a labeled overlay marks the occluded area. No physical iPhone or native keyboard was used.
+使用 Playwright WebKit，iPhone 14 视口为 `390 × 797` CSS 像素。测试将可视区高度设为 `464px`，缩放读数设为 `0.99999`，并用标注层标出键盘遮挡区域。未使用 iPhone 真机或原生软键盘。
 
-| Theme | Before input bottom | After input bottom | Keyboard top |
+| 主题 | 修复前输入区下沿 | 修复后输入区下沿 | 模拟键盘上沿 |
 | --- | ---: | ---: | ---: |
-| light | 751 px | 418 px | 464 px |
-| dark | 751 px | 418 px | 464 px |
+| 浅色 | 751 px | 418 px | 464 px |
+| 深色 | 751 px | 418 px | 464 px |
 
-Desktop: Chrome, 1280 × 900 CSS px, identical interactions and UI preferences. The conversation editor’s rectangle, font size, draft and inline bottom offset are identical before and after in both themes. Injecting a 333 px visual-viewport reduction on desktop changed neither the input position nor the draft.
+[手机深浅色前后对照](mobile-webkit.png)
 
-| Theme | Scene | Changed pixels |
+## 桌面端
+
+使用 Chrome 和 `1280 × 900` CSS 像素视口，前后采用相同的主题设置和操作。两种主题下，输入框位置和尺寸、字号、草稿及内联底部偏移一致；模拟可视区缩小 `333px` 后，输入框不移动，草稿不变。
+
+| 主题 | 场景 | 差异像素 |
 | --- | --- | ---: |
-| light | home | 0 / 1,152,000 |
-| light | chat | 0 / 1,152,000 |
-| light | settings | 0 / 1,152,000 |
-| dark | home | 0 / 1,152,000 |
-| dark | chat | 58 / 1,152,000 |
-| dark | settings | 0 / 1,152,000 |
+| 浅色 | 首页 | 0 / 1,152,000 |
+| 浅色 | 会话 | 0 / 1,152,000 |
+| 浅色 | 主题设置 | 0 / 1,152,000 |
+| 深色 | 首页 | 0 / 1,152,000 |
+| 深色 | 会话 | 58 / 1,152,000 |
+| 深色 | 主题设置 | 0 / 1,152,000 |
 
-Raw screenshots are kept unaltered, including the host’s live turn timestamp. `comparison.json` records any nonzero diff bounds. The desktop result applies to the tested scenes, not to the full repository CI matrix.
+深色会话的差异出现在回复结束时间。结果只覆盖这些场景，不代表完整 CI 矩阵通过。
+
+[桌面浅色对照](desktop-light.png) · [桌面深色对照](desktop-dark.png) · [像素差异数据](comparison.json) · [桌面视口测量](desktop-viewport-check.json)
