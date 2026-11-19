@@ -19,6 +19,7 @@
     "packages/client/src/features/composer/composer.ts": 6,
     "packages/client/src/features/composer/placeholder-copy.ts": 2,
     "packages/client/src/features/composer/responsive.ts": 5,
+    "packages/client/src/features/composer/visual-viewport.ts": 1,
     "packages/client/src/features/context-stats/meter-ring.ts": 2,
     "packages/client/src/features/context-stats/stream-estimate.ts": 3,
     "packages/client/src/features/date-groups/date-groups.ts": 3,

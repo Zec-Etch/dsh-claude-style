@@ -1,0 +1,8 @@
+{
+  "at": "2026-11-19",
+  "group": "fixes",
+  "order": 1,
+  "external": false,
+  "zh": "修复手机键盘弹起时输入框被遮挡或上移过多，以及浏览器工具栏变化时输入框跳动",
+  "en": "Fix the phone composer being covered or lifted too far when the keyboard opens, and jumping when the browser toolbar moves"
+}
