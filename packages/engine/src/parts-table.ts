@@ -11,7 +11,7 @@ export interface PartsTableVocabulary {
 /**
  * The host class names the skin reads, as data (D3): host CSS-module local name → the skin's own part name. The host hashes its class names, so a stylesheet cannot name one at build time and a substring match takes whatever else holds the fragment. A sheet names the part instead: packages/engine/src/parts.ts walks these tables, reports each hashed name it meets and writes the part names onto the elements for the browser half's queries and the hold relations, and packages/engine/src/part-classes.ts finishes the sheet on the page with the names reported (D101). This file is data only, so the build reads it directly (scripts/build/css.mjs, the part gate); a host rename is one line here.
  */
-import { COMPOSER_OVERLAY_SELECTOR, CONVERSATION_HEADER_SLOT_SELECTOR, CONVERSATION_MAIN_SLOT_SELECTOR, CONVERSATION_SCROLL_SELECTOR, RIGHTBAR_COLUMN_SELECTOR, ROOT_SLOT_SELECTOR, SHIMMER_DECORATION_SELECTOR, SIDEBAR_SLOT_SELECTOR } from '@dsh-claude-style/contracts/dom'
+import { COMPOSER_CARD_SELECTOR, COMPOSER_OVERLAY_SELECTOR, CONVERSATION_HEADER_SLOT_SELECTOR, CONVERSATION_MAIN_SLOT_SELECTOR, CONVERSATION_SCROLL_SELECTOR, RIGHTBAR_COLUMN_SELECTOR, ROOT_SLOT_SELECTOR, SHIMMER_DECORATION_SELECTOR, SIDEBAR_SLOT_SELECTOR } from '@dsh-claude-style/contracts/dom'
 
 /** Host CSS-module local name → the skin's part name. */
 export type PartTable = Record<string, string>
@@ -278,7 +278,7 @@ export function partRegions(vocabulary: PartsTableVocabulary): PartRegion[] {
     // beside them. Its local name is also every transcript row's, and those rows
     // all stand inside the scroll box, so the region reads nothing under that.
     { within: CONVERSATION_MAIN_SLOT_SELECTOR, parts: { body: 'conversation-body' }, skip: CONVERSATION_SCROLL_SELECTOR },
-    { within: CONVERSATION_SCROLL_SELECTOR, parts: CONVERSATION_PARTS, skip: COMPOSER_OVERLAY_SELECTOR },
+    { within: `${CONVERSATION_SCROLL_SELECTOR}, ${COMPOSER_CARD_SELECTOR}`, parts: CONVERSATION_PARTS, skip: COMPOSER_OVERLAY_SELECTOR },
     { within: RIGHTBAR_COLUMN_SELECTOR, parts: RIGHTBAR_PARTS },
     { within: `[${vocabulary.regions.account}], [${vocabulary.regions.hero}], [${vocabulary.regions.more}]`, parts: MENU_PARTS },
   ]
@@ -341,8 +341,7 @@ export function holdRelations(vocabulary: PartsTableVocabulary): HoldRelation[] 
     attributes: ['data-session-stats-details', 'data-session-stats-usage'],
   },
   // features/context-stats/footer-layout.css: the dock's reserved row stands
-  // only for figures that keep their own line under the toolbar; an overlaid
-  // line and a dock with no figures leave it empty.
+  // only for figures that keep their own line under the toolbar.
   {
     name: 'footer-below',
     holder: part('composer-dock'),
@@ -386,6 +385,15 @@ export function holdRelations(vocabulary: PartsTableVocabulary): HoldRelation[] 
     holder: part('footer-actions'),
     held: '[data-dsh-claude-footer-block]',
     attributes: ['data-dsh-claude-footer-block'],
+  },
+  // features/account/footer-takeover.css: the footer's action box keeps its size for
+  // an entry that opens a menu, which the takeover leaves in place in the sidebar
+  // rather than gathering into the account menu (issue #417).
+  {
+    name: 'footer-menu',
+    holder: part('footer-actions'),
+    held: '[data-dsh-claude-footer-menu]',
+    attributes: ['data-dsh-claude-footer-menu'],
   },
   // features/account/footer-takeover.css: the host mounts its own account menu on
   // <body>, outside the sidebar, so the collapsed rail's card width cannot be read

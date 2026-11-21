@@ -13,7 +13,6 @@ import { closestFrom, setAttributeIfChanged } from '@dsh-claude-style/engine/dom
 import { writeScroll } from '@dsh-claude-style/engine/scroll-owner'
 import { captureComposerCaret, composerComposing, focusKeepingComposerCaret } from '../../shared/composer-caret'
 import { createPlaceholderCopy } from './placeholder-copy'
-import { installWindowBlurMirror } from './selection-mirror'
 import { createComposerResponsive } from './responsive'
 import { createComposerViewportFollow } from './visual-viewport'
 
@@ -43,9 +42,8 @@ export interface ComposerHandle extends FeatureHandle {
  * chat tab (the composer's only view) is up. The scheduler triggers its
  * behaviours through hooks: a press on the inline card focuses the editor, a
  * composer input refreshes the hint's synthetic placeholder, and the transcript
- * follows the card when it changes height. The window-blur mirror the selection
- * paints key on and the idle hint's own words live here too — both read the
- * same card state this reading produces.
+ * follows the card when it changes height. The idle hint's own words live
+ * here too — they read the same card state this reading produces.
  */
 export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
   /** Whether the page shows the hero composer, as of the last reading. */
@@ -67,8 +65,6 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
    * whose teardown a hot reload dropped still has its marks swept.
    */
   const markedTiles = new Set<Element>(document.querySelectorAll(`[data-dsh-claude-attachment]`))
-  /** The window-blur mirror the selection paints key on */
-  const stopWindowBlur = installWindowBlurMirror()
 
   /**
    * A composition has landed: the hint's writes were held back while one was in
@@ -222,7 +218,8 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
    * The card's primary button, as the host draws it: the trailing row's button
    * the parts walk marked as the composer's primary one.
    */
-  const PRIMARY_SELECTOR = '[data-dsh-claude-part~="trailing"] button[data-dsh-claude-part~="composer-primary"]'
+  const TRAILING_SELECTOR = '[data-dsh-claude-part~="trailing"]'
+  const PRIMARY_SELECTOR = `${TRAILING_SELECTOR} button[data-dsh-claude-part~="composer-primary"]`
 
   /**
    * Mark each host control on the composer with what it is, so the
@@ -415,7 +412,16 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
    * `observeMatches` listens without `beforePaint`, so on a large batch it
    * is a task late and the card this batch mounted is not in its list yet.
    */
-  const stopMutations = subscribeMutations(document.body, { childList: true, subtree: true, beforePaint: true }, (records) => {
+  const stopMutations = subscribeMutations(document.body, { childList: true, characterData: true, subtree: true, beforePaint: true }, (records) => {
+    // A third-party control can change its content width without moving the
+    // card or the row, so their ResizeObserver alone cannot see it. Text nodes
+    // have no parentElement on EventTarget, hence the explicit parent read.
+    const controlsChanged = records.some(record => {
+      const target = record.target
+      const element = target instanceof Element ? target : target.parentElement
+      return element !== null && element.closest(TRAILING_SELECTOR) !== null
+    })
+    if (controlsChanged) responsive.measure()
     const pending = addedCards(records).filter(card => !markedForPaint(card))
     if (pending.length === 0) return
     readState()
@@ -515,7 +521,6 @@ export function install(ctx: HostContext, ui: FeatureUi<typeof manifest>) {
     stopMutations()
     active = false
     heroCard = null
-    stopWindowBlur()
     document.removeEventListener('compositionend', onCompositionEnd, true)
     placeholderCopy.dispose()
     responsive.dispose()

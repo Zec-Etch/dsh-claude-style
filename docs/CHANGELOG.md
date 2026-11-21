@@ -2,6 +2,122 @@
 
 All notable changes to `dsh-claude-style` are documented here, newest first.
 
+## [0.21.7] - 2026-11-20
+
+[中文](#cn-0.21.7) | [English](#en-0.21.7)
+
+<h3 id="cn-0.21.7">体验优化</h3>
+
+- 移除对话顶栏下方的渐隐遮罩，恢复 DSH 原有的分隔线
+- 新增「焦点不在对话页内隐藏工具栏」开关，指针移到宿主右侧面板时淡出视图标签、更多视图菜单和右侧工具，悬停侧栏或详情栏时保持显示
+- 长会话切换与流式输出时主题的主线程开销约减少一半，统计数字计数期间不再每帧触发整页更新，会话详情栏每帧最多测量一次，关闭的 effort 卡片与无关字体加载不再强制重排
+- 「更多操作」按钮始终紧贴会话标题并显示为向下箭头，网页、窄窗口和桌面标题栏使用同样的排列
+- 独立统计行与对话详情栏支持可配置的 K/M/B/T Token 单位，并默认使用单位显示
+- 统一顶栏、侧栏和详情栏外侧的分隔线，详情分节和模型菜单分组使用更淡的细线
+- 对话视图标签的下划线在悬停时拉伸和平移，点击切换视图时沿用悬停位置
+- 对话和轨迹改用带下划线的文字标签，连同更多视图菜单靠右放在顶栏工具按钮之前
+- 顶栏的对话和轨迹标签在悬停时高亮文字，切换时下划线拉伸并缓动至选中的标签，支持减少动态效果
+- 切换会话时主题强制触发的样式与排版计算从约五次减到一次，详情栏位置、统计行宽度、标签滑块与输入光标都改在帧的读取阶段或尺寸回报里测量，每次切换省下约 70 毫秒主线程时间
+- 对话里的选中配色改为在开始选中文字时才覆盖这段对话，长会话切换时浏览器不再为每个元素额外计算一份选中样式，每次切换的长帧总时长约减少两成；窗口失焦或获得焦点时，没有选中文字就不再触发整页样式重算
+- 折叠起来的进程组不再在切换会话时逐个测量摘要宽度，改为展开显示的那一帧再测量，长会话切换时省下几十次单独的样式计算
+
+### 问题修复
+
+- 紧凑统计行直接纳入对话输入区工具栏布局，修复紧凑底部间距在切换会话时跳动的问题
+- 修复重绘账户区后插件菜单触发器入口彻底消失的问题，菜单触发器保留在侧栏原位置，菜单定位与焦点返回正常
+- 关闭「对话 / 轨迹标签靠右显示」时，原位视图标签和更多视图菜单保持可见
+- 过程摘要会一并隐藏活动按钮内的额外工具状态文本，助手正文仍保持可见
+- 展开或收起右侧栏时，桌面顶栏中靠右的对话和轨迹标签保持原位
+- 无上下文压力投影的宿主上，上下文圆环跟随宿主计量条的读数更新
+- 会话标题按顶栏可用宽度显示，空间足够时显示完整名称
+- 修复配色编辑器把预设手调链接色显示成「由强调色推出」的问题，链接行改为显示实际解析出的颜色与对比度，未带链接种子的方案显示推出后的颜色并把来源留作附注
+
+### 其他变更
+
+- 清理无人调用的导出、结果与默认值相同的旧值映射、旧宿主日志读取回退、两个孤立探针与作废决策编号引用，并补齐决策作废记录
+- 故障语料补丁跟上当前代码，故障运行计入安装类用例的失败，lint 增加故障补丁可应用性检查
+
+<h3 id="en-0.21.7">Improvements</h3>
+
+- Restore the native divider below the conversation header by removing the gradient overlay
+- Add a Hide toolbar outside the conversation setting that fades the view tabs, More views menu and right-hand tools over the host right panel and keeps them up over the sidebar and details rail
+- Switching between long sessions and streaming answers costs the theme about half the main-thread time, as the counting statistics no longer wake a page-wide pass every frame, the details rail measures at most once a frame, and a closed effort card or an unrelated font loading no longer forces a layout
+- Keep the More actions button flush with the session title, with a downward chevron in the web header, narrow windows, and the desktop caption
+- Add configurable K/M/B/T token units to the independent statistics line and conversation details rail, with units shown by default
+- Match the dividers at the header and column edges, with subtler hairlines between details sections and model groups
+- Preview the view tab underline on hover, leaving selection free of a new animation
+- Use underlined text tabs for Chat and Trajectory and place them with More views before the tools on the right side of the title bar
+- Highlight Chat and Trajectory labels on hover and ease the stretching underline between tabs, with support for reduced motion
+- Switching sessions now forces one style and layout pass from the theme where it used to force about five, as the details rail, the statistics line, the tab slider and the composer caret measure in the frame's read phase or in a size report, saving about 70 ms of main-thread time per switch
+- The selection colours now cover a conversation from the moment text is first selected in it, so switching long sessions no longer has the browser work out a selection style for every element, cutting about a fifth of the long frames per switch; losing or regaining window focus with nothing selected no longer restyles the whole page
+- Folded process groups no longer measure their summary one by one on a session switch; each is measured in the frame that shows it, sparing a long session's switch dozens of separate style computations
+
+### Bug Fixes
+
+- Seat compact statistics inside the composer toolbar and keep the compact bottom gap steady when switching conversations
+- Fix a plugin menu-trigger footer entry vanishing once the account area is redrawn, keeping the trigger in its sidebar place with its menu placement and focus return intact
+- Keep the native view tabs and More views menu visible when right alignment is off
+- The process summary hides extra tool status text inside the activity button while keeping the assistant answer visible
+- Keep the right-aligned Chat and Trajectory tabs in place when the right sidebar opens or closes
+- Follow the host meter's reading on the context ring when the host serves no context-pressure projection
+- Show the full session title whenever it fits in the header
+- Fix the scheme editor reading a preset's hand-tuned link colour as derived-from-accent, so the link row shows the resolved colour and its contrast, and a scheme without a link seed shows the derived colour with its origin kept as a side note
+
+### Chores
+
+- Remove unreferenced exports, identity legacy preference mappings, the old-host log read fallback, two standalone probes and retired decision citations, and complete the decision retirement record
+- Bring fault corpus patches up to the current tree, credit installation-case failures in the faults lane, and check fault patch applicability in lint
+
+## [0.21.6] - 2026-11-19
+
+[中文](#cn-0.21.6) | [English](#en-0.21.6)
+
+<h3 id="cn-0.21.6">体验优化</h3>
+
+- 已有会话输入栏在第三方额度控件存在时优先保持紧凑单行，模型名按剩余空间省略，空间不足时安全换行
+- 对话详情的上下文分项按八类拆分（系统提示、工具、技能和MCP、对话正文、推理过程、执行过程、工具结果、文件与图片、上下文注入），推理按助手消息残差计量，文件与图片从各消息独立提取，能力行名称随构成变化
+- 消息撤回、编辑、重跑与删除此轮新增确认窗口和工作区检查点，可在原历史位置继续并同时恢复代码改动；侧边栏只显示逻辑对话的活动版本，原 fork 进入宿主归档并可从版本历史取消归档
+- 侧栏悬停唤出扩展到窗口左缘 32px 全高热区，悬浮展开与收回时主区保持原位
+- 上下文计价的字符类别系数对 DeepSeek 分词器重新拟合（词长表与数字锚点保持不变），详情栏分项更贴近实际占用；流式增长的低估单独成层，基准准确度与动画手感各自独立可调
+
+### 问题修复
+
+- 滚动长会话时，状态装饰和流程摘要的数字不再参与指针命中测试；流程按钮仍可点击
+- 合并对话末尾的位置读取，避免无关页面更新在切换或阅读长会话时触发布局测量
+- 修复深色模式下模型选择器的推理档位文字（如 Max）在自定义强调色下变成深蓝而难以辨认，各档位文字与画布保持正文可读的对比度
+- 修复紧凑底栏下上下文圆环掉出统计排列的问题（#405），移除「底栏上下文圆环」开关，圆环常驻输入区工具栏、与费用等统计项同排，百分比读数仍随「上下文占用百分比」开关显示
+- 首页模型排名和最常用模型跟随当前工作区或活跃会话范围；范围内没有模型用量时显示为空
+- 官方 DSH 界面提供的浏览器组件不再要求在 profile 内另外安装
+- 过程摘要只替换活动按钮上的计数句，按钮内的其余内容不再被一并隐藏，助手正文保持可见
+- Windows 标题栏中的会话标签持续可见，移动指针或使用输入法组词时不会淡出
+- 修复切回会话时插件把宿主恢复的阅读位置缓动到末尾并重新开启跟随的问题，交还跟随只在读者已经位于末尾时进行
+- 修复悬停展开的账号菜单与工作区、预设选择卡片在指针移入时立即收起的问题，指针在入口与卡片之间移动时保持展开
+- 修复消息撤回后分岔收尾行短暂留在时间线的问题，收尾行随宿主快照发布即时隐去，逻辑对话保持一条连续时间线
+- 修复网页字体加载后标题栏控件簇与会话标题的间距偏离设定值的问题，标题宽度随字体落定即重新定位
+
+<h3 id="en-0.21.6">Improvements</h3>
+
+- Keep the conversation composer compact and single-row with third-party quota controls when room allows, ellipsize the model name, and wrap safely when space runs out
+- Split the details rail context into eight categories (system prompt, tools/skills/MCP, conversation, reasoning, execution, tool results, files/images, context injection), meter reasoning as the assistant residual, extract files/images from every message, and let the capability row's label follow its mix
+- Add confirmation dialogs and workspace checkpoints to message retract, edit, rerun and delete-turn, continuing from the original history position while restoring code changes; the sidebar shows only the active revision of one logical conversation, archives source forks, and lets revision history unarchive them
+- Extend sidebar hover peeking to a full-height 32px strip at the window's left edge while the centre stays in place as the overlay opens and closes
+- Refit the context estimator's character-class rates to the DeepSeek tokenizer (word-length table and digit anchors preserved) for a closer detail-panel split; the streaming growth under-estimate becomes its own layer, so base accuracy and animation feel tune independently
+
+### Bug Fixes
+
+- Exclude chat status decorations and process-summary digits from hit testing while keeping disclosure buttons clickable
+- Coalesce chat tail position checks and avoid layout reads triggered by unrelated page updates while switching or reading long conversations
+- Fix the reasoning level text in the model selector (such as Max) turning a hard-to-read dark blue in dark mode with a custom accent, keeping every level at body-text contrast against the canvas
+- Fix the context ring dropping out of the compact footer's statistics arrangement (#405) by removing the 'Footer context ring' switch, the ring always standing in the composer toolbar beside the cost and other figures while its percentage still follows the 'Context occupancy percentage' switch
+- Keep the home model ranking and favorite model within the selected workspace or active sessions, and show an empty state when no model usage is attributed
+- Mark the official DSH frontend’s built-in browser UI primitives as an optional npm peer
+- The process summary replaces only the count sentence on the activity button, no longer hiding the rest of the control's content and keeping the assistant's answer visible
+- Keep conversation tabs visible in the Windows title bar when the pointer leaves the conversation or an IME candidate window opens
+- Fix the hand-back springing a reading position the host restored to the end when the reader switches back to a conversation, handing the follow back only from the end he is already at
+- Fix hover-opened account menus and workspace/preset picker cards folding as the pointer moves into them, keeping the card open while the pointer travels between the trigger and the card
+- Fix the forked turn tail lingering on the timeline after a message retract, hiding it as soon as the host publishes the turn end so a logical conversation keeps one continuous timeline
+- Fix the caption-row control cluster drifting off its set gap from the session title after a webfont loads, re-placing it as soon as the title's width settles
+
 ## [0.21.5] - 2026-11-17
 
 [中文](#cn-0.21.5) | [English](#en-0.21.5)
